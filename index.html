@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administration · LeZachh</title>
+  <link rel="icon" href="/assets/lezachh-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/admin-refresh.css">
+  <script src="/admin/admin.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="mark">LZ</span><span>LeZachh<small>ESPACE ADMINISTRATION</small></span></a>
+    <div class="top-actions"><a class="back-link" href="/">← Voir le site</a><button class="button ghost" id="logoutButton" type="button" hidden>Se déconnecter</button></div>
+  </header>
+  <main class="shell">
+    <section id="loginPanel" class="login-panel" aria-labelledby="loginTitle">
+      <div class="auth-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.7-2.7 8-7 10-4.3-2-7-5.3-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div class="eyebrow">AUTHENTIFICATION · ESPACE PRIVÉ</div>
+      <h1 id="loginTitle">Accès sécurisé<br><em>LeZachh.</em></h1>
+      <p class="muted">Saisis les identifiants administrateur configurés dans Cloudflare pour ouvrir ta session.</p>
+      <div class="security-summary" aria-label="Protections de la session"><span><i aria-hidden="true"></i>Mot de passe haché</span><span><i aria-hidden="true"></i>Session limitée à 8 h</span><span><i aria-hidden="true"></i>Essais surveillés</span></div>
+      <form id="loginForm" class="stack-form" autocomplete="on">
+        <label>Nom d’utilisateur<input name="username" autocomplete="username" required maxlength="120"></label>
+        <label>Mot de passe<input name="password" type="password" autocomplete="current-password" required maxlength="1024"></label>
+        <button class="button primary" type="submit">Ouvrir ma session <span aria-hidden="true">↗</span></button>
+      </form>
+      <div id="setupBox" class="setup-box" hidden><strong>Configuration incomplète</strong><p class="muted small-copy">La connexion ne fonctionnera pas tant que ces points ne sont pas réglés dans Cloudflare :</p><ul id="setupList"></ul></div>
+      <p id="loginStatus" class="status" role="status" aria-live="polite"></p>
+      <p class="login-note">La session expire automatiquement après 8 heures.</p>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="page-heading"><div><div class="eyebrow">CENTRE DE CONTRÔLE</div><h1>Bonjour, <em>LeZachh.</em></h1><p class="muted">Gérez les contenus et les informations de votre site.</p></div><span class="secure-pill"><span></span> Session sécurisée</span></div>
+      <div id="dashboardStatus" class="status" role="status" aria-live="polite"></div>
+      <section class="panel" aria-labelledby="statsTitle">
+        <div class="panel-heading"><div><div class="eyebrow">APERÇU</div><h2 id="statsTitle">Fréquentation</h2></div><button class="button ghost small" id="refreshStats" type="button">Actualiser</button></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="trend" id="trend" role="img" aria-label="Visiteurs par jour sur 14 jours"></div>
+        <div class="two-column tops"><div><h3>Pages les plus vues (30 jours)</h3><ol id="topPages" class="mini-list"></ol></div><div><h3>Provenance (30 jours)</h3><ol id="topRefs" class="mini-list"></ol></div></div>
+      </section>
+      <section class="panel" aria-labelledby="visitorsTitle">
+        <div class="panel-heading"><div><div class="eyebrow">AUDIENCE</div><h2 id="visitorsTitle">Visiteurs du site</h2></div><button class="button ghost small" id="refreshVisitors" type="button">Actualiser</button></div>
+        <p class="muted small-copy">Identifiants aléatoires · adresses IP non enregistrées · visites mesurées après accord</p>
+        <div class="table-wrap"><table><thead><tr><th>Visiteur</th><th>Première visite</th><th>Dernière visite</th><th>Pages vues</th><th>Dernière page</th><th>Provenance</th></tr></thead><tbody id="visitorsBody"></tbody></table></div>
+        <p id="visitorsEmpty" class="empty" hidden>Aucune visite enregistrée pour le moment.</p>
+      </section>
+
+      <div class="two-column">
+        <section class="panel" aria-labelledby="productsTitle">
+          <div class="panel-heading"><div><div class="eyebrow">OFFRES</div><h2 id="productsTitle">Produits et prix</h2></div><button class="button ghost small" id="newProduct" type="button">+ Nouveau</button></div>
+          <label>Produit à modifier<select id="productSelect"><option value="">Choisir un produit</option></select></label>
+          <form id="productForm" class="stack-form compact-form">
+            <input type="hidden" name="id">
+            <label>Nom<input name="name" required maxlength="100"></label>
+            <div class="field-row"><label>Section<select name="placement"><option value="shop">Boutique</option><option value="training">Formation</option></select></label><label>Catégorie<input name="category" required maxlength="48"></label></div>
+            <label>Description<textarea name="description" rows="3" required maxlength="800"></textarea></label>
+            <div class="field-row"><label>Prix<input name="price" inputmode="decimal" type="number" min="0" step="0.01" required></label><label>Ancien prix<input name="oldPrice" inputmode="decimal" type="number" min="0" step="0.01"></label><label>Devise<select name="currency"><option value="USD">USD</option><option value="FCFA">FCFA</option><option value="COP">COP</option><option value="AUD">AUD</option></select></label></div>
+            <label>Lien d’achat ou de contact<input name="externalUrl" type="url" inputmode="url" maxlength="2048" placeholder="https://…"></label>
+            <div class="check-row"><label class="check"><input name="featured" type="checkbox"> Mettre en avant</label><label class="check"><input name="active" type="checkbox" checked> Visible sur le site</label></div>
+            <div class="form-actions"><button class="button primary" type="submit">Enregistrer le produit</button><button class="button danger" id="deleteProduct" type="button" disabled>Supprimer</button></div>
+          </form>
+        </section>
+
+        <section class="panel" aria-labelledby="announcementsTitle">
+          <div class="panel-heading"><div><div class="eyebrow">ACTUALITÉS</div><h2 id="announcementsTitle">Annonces</h2></div><button class="button ghost small" id="newAnnouncement" type="button">+ Nouvelle</button></div>
+          <ul id="announcementList" class="item-list"></ul>
+          <form id="announcementForm" class="stack-form compact-form">
+            <input type="hidden" name="id">
+            <label>Titre<input name="title" required maxlength="100"></label>
+            <label>Message<textarea name="message" rows="4" required maxlength="1200"></textarea></label>
+            <label>Lien (facultatif)<input name="externalUrl" type="url" inputmode="url" maxlength="2048" placeholder="https://…"></label>
+            <label class="check"><input name="active" type="checkbox" checked> Afficher cette annonce</label>
+            <div class="form-actions"><button class="button primary" type="submit">Enregistrer l’annonce</button><button class="button danger" id="deleteAnnouncement" type="button" disabled>Supprimer</button></div>
+          </form>
+        </section>
+      </div>
+
+      <section class="panel" aria-labelledby="backgroundTitle">
+        <div class="panel-heading"><div><div class="eyebrow">IDENTITÉ VISUELLE</div><h2 id="backgroundTitle">Photo d’arrière-plan</h2></div></div>
+        <p class="muted small-copy">Choisissez une image de ce site ou une adresse HTTPS. Utilisez une image publique que vous êtes autorisé à publier.</p>
+        <form id="backgroundForm" class="background-form">
+          <label class="url-label">URL de l’image<input name="backgroundUrl" type="text" inputmode="url" required maxlength="2048" placeholder="/assets/mon-image.jpg"></label>
+          <button class="button primary" type="submit">Enregistrer la photo</button>
+        </form>
+        <div class="upload-row"><label class="button ghost" for="backgroundFile">Importer une photo depuis l’appareil</label><input id="backgroundFile" type="file" accept="image/jpeg,image/png,image/webp" hidden><span class="muted small-copy">JPG, PNG ou WebP · réduite automatiquement avant l’envoi</span></div>
+        <div class="preview-wrap"><img id="backgroundPreview" alt="Aperçu de la photo d’arrière-plan" loading="lazy"><span id="previewFallback" hidden>Aperçu indisponible</span></div>
+      </section>
+      <p class="footer-note">LeZachh · Administration protégée par mot de passe. Les changements sont enregistrés dans la base de données du site.</p>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
